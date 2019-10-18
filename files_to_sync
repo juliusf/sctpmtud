@@ -1,3 +1,4 @@
+usrsctplib/netinet/sctp_structs.h
 usrsctplib/netinet/sctp_auth.c
 usrsctplib/netinet/sctp_auth.h
 usrsctplib/netinet/sctp_constants.h
