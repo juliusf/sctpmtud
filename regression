@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+BASE_PATH=`dirname "$0"`
+cd $BASE_PATH/usrsctp/juliusf/programs
+
+echo starting ekr_loop
+if ! sudo ./ekr_loop >> /dev/null; then
+	echo "ekr_loop failed"
+	exit 1
+fi
+
+echo starting ekr_loop_upcall
+
+if ! sudo ./ekr_loop_upcall >> /dev/null; then
+	echo "ekr_loop_upcall failed"
+	exit 1
+fi
+

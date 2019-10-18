@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+BASE_PATH=`dirname "$0"`
+cd $BASE_PATH/usrsctp/juliusf/
+echo configuring...
+./configure >> /dev/null
+echo done
+echo compiling
+make -j2 >> /dev/null
+echo done
