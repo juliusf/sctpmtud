@@ -1,22 +1,21 @@
 #!/bin/bash
 
 #set -e
-FOLDER=$1
+BASE_FOLDER=$1
 DEFINITIONS=$( cat $2 | tr '\n' ' ')
-HFILES=$FOLDER/*.h
-CFILES=$FOLDER/*.c
+FILES=$3
 
 OUTDIR=./out/
 echo "Stripping .c and .h files in $FOLDER"
 
 
 
-for f in $HFILES $CFILES
-do
+while read f; do
+	f=$BASE_FOLDER$f
 	filename=$(basename -- "$f")
 	dir="$(dirname $f)"
 	dir="$(basename $dir)"
 	targetdir=$OUTDIR/$dir
 	mkdir -p $targetdir
  	unifdef $DEFINITIONS -o $targetdir/$filename $f
-done	
+done < $FILES	
