@@ -1,3 +1,3 @@
 usrsctp/
 .vagrant/
-.kernel_src
+.kernel_src/

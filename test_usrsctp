@@ -3,7 +3,7 @@
 set -e
 
 BASE_PATH=`dirname "$0"`
-cd $BASE_PATH/usrsctp/juliusf/programs
+cd $BASE_PATH/usrsctp/jf/programs
 
 echo starting ekr_loop
 if ! sudo ./ekr_loop >> /dev/null; then

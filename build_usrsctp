@@ -3,7 +3,7 @@
 set -e
 
 BASE_PATH=`dirname "$0"`
-cd $BASE_PATH/usrsctp/juliusf/
+cd $BASE_PATH/usrsctp/jf/
 echo configuring...
 ./configure >> /dev/null
 echo done
