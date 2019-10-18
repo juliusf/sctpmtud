@@ -1,4 +1,5 @@
 usrsctp/
 .vagrant/
+out/
 kernel_src
 
