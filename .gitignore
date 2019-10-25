@@ -3,3 +3,5 @@ usrsctp/
 out/
 kernel_src
 .*.swp
+*.json
+*.pcap
