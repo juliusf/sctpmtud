@@ -15,16 +15,17 @@ function run_experiment {
 
 	echo "starting capture"
 	tcpdump -i $tap_interface sctp or icmp -w $filename.pcap &
+	scp sctp_log_cwnd.d $host:~/
 	ssh root@$host "dtrace -s /home/jules/sctp_log_cwnd.d > cwnd_log_$filename.json &" &
 	sleep 1
 	echo "starting client"
 	ssh $host "/remote/projects/trafficgen/tsctp/tsctp -n0 10.23.23.2 &" &
 	echo "waiting for experiment to finish"
 	sleep 15
-	./set_rtr_mtu.sh 1200
-	#sleep 15
-	#./set_rtr_mtu.sh 1400
+	./set_rtr_mtu.sh 1000
 	sleep 20
+	#./set_rtr_mtu.sh 1500
+	#sleep 20
 	echo "killing client"
 	ssh $host "killall tsctp"
 	echo "killing capture"
@@ -55,7 +56,7 @@ function reset_bottleneck {
 }
 
 
-configure_bottleneck "bw 10Mbit/s delay 20ms"
+configure_bottleneck "bw 10Mbit/s delay 20ms queue 50kbytes"
 
 run_experiment $CUSTOM_HOST $CUSTOM_TAP "custom"
 run_experiment $VANILLA_HOST $VANILLA_TAP "vanilla"
