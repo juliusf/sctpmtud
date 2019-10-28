@@ -17,7 +17,9 @@ def main():
         y_flight_size = []
         x_mtu = []
         y_mtu = [] 
-
+        x_rto = []
+    
+        last_rto_seen = 0
         for p in data:
             if p['type'] == 'cwnd':
                 x_cwnd.append(p['time'])
@@ -28,8 +30,19 @@ def main():
             elif p['type'] == 'mtu':
                 x_mtu.append(p['time'])
                 y_mtu.append(p['mtu'])
+            elif p['type'] == 'rto':
+                if p['rto'] > last_rto_seen:
+                    x_rto.append(p['time'])
+                    last_rto_seen += 1
     
+
     fig, axs = plt.subplots(2)   
+
+    plt.title(sys.argv[1])
+
+
+    for rto in x_rto:
+         axs[0].axvline(x=rto, color='r')
     axs[0].plot(x_cwnd, y_cwnd, label='cwnd')
     axs[0].plot(x_flight_size, y_flight_size, label='flight_size')
     
@@ -42,8 +55,7 @@ def main():
     axs[1].set(xlabel='time (us)', ylabel='byte')
     axs[1].grid()
     axs[1].legend()
-
-
+    
     plt.show()
 
 if __name__ == "__main__":
@@ -54,8 +66,13 @@ if __name__ == "__main__":
         file = open(sys.argv[1], 'r+')
         all_lines = file.readlines()
         if all_lines[-1] != "]":
-            file.seek(0, os.SEEK_END)
-            file.write("]")
+            if all_lines[-1][-1] != "\n":
+                del all_lines[-1]
+            all_lines.append(']')
+            file.close()
+            file = open(sys.argv[1], 'w')
+            for line in all_lines:
+                file.write(line)
             file.close()
             main()
         else:
