@@ -17,9 +17,14 @@ def main():
         y_flight_size = []
         x_mtu = []
         y_mtu = [] 
+        x_min_mtu = []
+        y_min_mtu = []
+        x_trtx = []
+        x_rtt = []
+        y_rtt = []
         x_rto = []
-    
-        last_rto_seen = 0
+        y_rto = []
+        last_trtx_seen = 0
         for p in data:
             if p['type'] == 'cwnd':
                 x_cwnd.append(p['time'])
@@ -30,19 +35,27 @@ def main():
             elif p['type'] == 'mtu':
                 x_mtu.append(p['time'])
                 y_mtu.append(p['mtu'])
+            elif p['type'] == 'min_mtu':
+                x_min_mtu.append(p['time'])
+                y_min_mtu.append(p['min_mtu'])
+            elif p['type'] == 'trtx':
+                if p['trtx'] > last_trtx_seen:
+                    x_trtx.append(p['time'])
+                last_trtx_seen =  p['trtx']
+            elif p['type'] == 'rtt':
+                x_rtt.append(p['time'])
+                y_rtt.append(p['rtt'] / 1000)
             elif p['type'] == 'rto':
-                if p['rto'] > last_rto_seen:
-                    x_rto.append(p['time'])
-                    last_rto_seen += 1
-    
+                x_rto.append(p['time'])
+                y_rto.append(p['rto'])
 
-    fig, axs = plt.subplots(2)   
+    fig, axs = plt.subplots(3)   
 
     plt.title(sys.argv[1])
 
 
-    for rto in x_rto:
-         axs[0].axvline(x=rto, color='r')
+    for rtx in x_trtx:
+         axs[0].axvline(x=rtx, color='r')
     axs[0].plot(x_cwnd, y_cwnd, label='cwnd')
     axs[0].plot(x_flight_size, y_flight_size, label='flight_size')
     
@@ -51,11 +64,19 @@ def main():
     axs[0].legend()
     
     axs[1].plot(x_mtu, y_mtu, label='mtu')
+    axs[1].plot(x_min_mtu, y_min_mtu, label='min_mtu')
     
     axs[1].set(xlabel='time (us)', ylabel='byte')
     axs[1].grid()
     axs[1].legend()
     
+    axs[2].plot(x_rtt, y_rtt, label='rtt')
+    axs[2].plot(x_rto, y_rto, label='rto')
+    axs[2].set(xlabel='time (us)', ylabel='time (ms)')
+    axs[2].grid()
+    axs[2].legend()
+
+
     plt.show()
 
 if __name__ == "__main__":
